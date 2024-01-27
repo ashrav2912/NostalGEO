@@ -1,13 +1,15 @@
-# import folium
-# import streamlit as st
+import folium
+import streamlit as st
+from bokeh.models import Button, CustomJS
+from streamlit_bokeh_events import streamlit_bokeh_events
 
-# from streamlit_folium import st_folium
-# from get_curr_loc import get_curr_loc
+from streamlit_folium import st_folium
+from get_curr_loc import get_curr_loc
 # def home_page():
 #     # center on Liberty Bell, add marker
 #     m = folium.Map(location=get_curr_loc(), zoom_start=16)
 #     folium.Marker(
-#         get_curr_loc(), popup="Liberty Bell", tooltip="Liberty Bell"
+#         get_curr_loc(), popup="Your location", tooltip="Your location"
 #     ).add_to(m)
 
 #     # call to render Folium map in Streamlit
@@ -16,13 +18,10 @@
 # if __name__ == '__main__':
 #     home_page()
 
-import streamlit as st
-from bokeh.models.widgets import Button
-from bokeh.models import CustomJS
-from streamlit_bokeh_events import streamlit_bokeh_events
+
+
 
 def app():
-    st_button = st.button("Get Location")
     loc_button = Button(label="Get Location")
     loc_button.js_on_event("button_click", CustomJS(code="""
         navigator.geolocation.getCurrentPosition(
@@ -36,9 +35,33 @@ def app():
         events="GET_LOCATION",
         key="get_location",
         refresh_on_update=False,
-        override_height=75,
+        override_height=20,
         debounce_time=0)
-    print(result)
+    # st.bokeh_chart(result)
+    if(result):
+        latlong = [result['GET_LOCATION']['lat'], result['GET_LOCATION']['lon']]
+        print(latlong)
+        return latlong
+    else:
+        return [0,0]
+    
+def home_page():
+    # center on Liberty Bell, add marker
+    latlong = app()
+    m = folium.Map(location=latlong, zoom_start=16)
+    # folium.Marker(
+    #     app(), popup="Your location", tooltip="Your location"
+    # ).add_to(m)
+
+    # call to render Folium map in Streamlit
+    count = 0
+    loc_list = ["Your location"]
+    for loc in loc_list:
+        folium.Marker(
+        latlong, popup=loc, tooltip=loc
+    ).add_to(m)
+    st_data = st_folium(m, width=725)
 
 if __name__ == '__main__':
-    app()
+    home_page()
+
