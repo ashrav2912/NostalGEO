@@ -21,7 +21,7 @@ from get_curr_loc import get_curr_loc
 
 
 
-def app():
+def location():
     loc_button = Button(label="Get Location")
     loc_button.js_on_event("button_click", CustomJS(code="""
         navigator.geolocation.getCurrentPosition(
@@ -47,7 +47,7 @@ def app():
     
 def home_page():
     # center on Liberty Bell, add marker
-    latlong = app()
+    latlong = location()
     m = folium.Map(location=latlong, zoom_start=16)
     # folium.Marker(
     #     app(), popup="Your location", tooltip="Your location"
@@ -55,11 +55,11 @@ def home_page():
 
     # call to render Folium map in Streamlit
     count = 0
-    loc_list = ["Your location"]
-    for loc in loc_list:
-        folium.Marker(
-        latlong, popup=loc, tooltip=loc
-    ).add_to(m)
+    folium.Marker(
+    latlong, popup="Your location", tooltip="Your location"
+).add_to(m)
+    folium.Marker(
+    [37.7749, -122.4194], popup="Your location", tooltip="Your location").add_to(m)
     st_data = st_folium(m, width=725)
 
 if __name__ == '__main__':
