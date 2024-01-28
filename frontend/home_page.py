@@ -59,11 +59,17 @@ def home_page():
     response = requests.get("http://localhost:3000/get_markers")
     print("Response: ", response.text)
     print("Type: ", type(response.text))
+    json_list = eval(response.text)
+    print("Json list: ", json_list)
+    print(type(json_list) , "wrong")
     folium.Marker(
     latlong, popup="Your location", tooltip="Your location"
 ).add_to(m) 
-    folium.Marker(
-    [37.7749, -122.4194], popup="Your location", tooltip="Your location").add_to(m)
+    for ele in json_list:
+        coords = eval(ele['location'])
+        coords = list(coords)
+        folium.Marker(
+        coords, popup="Location", tooltip="location").add_to(m)
     st_data = st_folium(m, width=725)
 
 if __name__ == '__main__':
