@@ -4,8 +4,7 @@ const path = require('path');
 const app = express();
 const port = 3000;
 const db = new sqlite3.Database(path.join(__dirname, '/db/app.db'));
-
-// EXPECTS LATITUDE AND LONGITUDE TO BE PASSED AS lat = 123.123 AND long = 123.123
+db.run("DELETE FROM markers"); // UNCOMMENT/COMMENT OUT THIS LINE IF YOU WANT TO CLEAR/PRESERVE THE TABLE FULL OF MARKERS. RESTART THE SERVER FOR THIS TO TAKE EFFECT
 app.get('/create_marker', (req, res) => {
     const lat = req.query.location.split(',')[0];
     const long = req.query.location.split(',')[1];

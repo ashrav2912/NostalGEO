@@ -1,127 +1,71 @@
-from streamlit_elements import dashboard, elements, mui, html
+
 import streamlit as st
+from streamlit_elements import dashboard, elements, mui, html
+
+import random # For testing
 
 
-st.title("Nostalgeo")
+st.set_page_config(layout="wide") # Smaller margins
 
+st.title("Nostalgeo") 
+
+year = st.slider("Please select a rating range", min_value=2000, max_value=2015)
+
+
+# Material UI Dashboard
 
 with elements("dashboard"):
    
-    mui.Container()
+    # mui.Container()
 
+    # Local images for gallery
     images = [
-        "https://picsum.photos/300",
-        "https://picsum.photos/301",
-        "https://picsum.photos/302",
-        "https://picsum.photos/303",
-        "https://picsum.photos/304",
-        "https://picsum.photos/305",
-        "https://picsum.photos/306",
-        "https://picsum.photos/307",
-        "https://picsum.photos/308",
-        "https://picsum.photos/309",
-        "https://picsum.photos/310",
-        "https://picsum.photos/311",
-        "https://picsum.photos/312",
-        "https://picsum.photos/313",
-        "https://picsum.photos/314",
-        "https://picsum.photos/315"
+        ["https://picsum.photos/301", 2000],
+        ["https://picsum.photos/302", 2001],
+        ["https://picsum.photos/303", 2002],
+        ["https://picsum.photos/304", 2003],
+        ["https://picsum.photos/305", 2004],
+        ["https://picsum.photos/306", 2005],
+        ["https://picsum.photos/307", 2006],
+        ["https://picsum.photos/308", 2007],
+        ["https://picsum.photos/309", 2008],
+        ["https://picsum.photos/310", 2009],
+        ["https://picsum.photos/311", 2010],
+        ["https://picsum.photos/312", 2011],
+        ["https://picsum.photos/313", 2012],
+        ["https://picsum.photos/314", 2013],
+        ["https://picsum.photos/315", 2015],
+        ["https://picsum.photos/316", 2015],
+        ["https://picsum.photos/317", 2015],
     ]
-
-
 
     width = 2
     height = 2
     iteration = 0
-    layout = [    dashboard.Item("https://picsum.photos/300", 0, 0, 2, 2),
-        dashboard.Item("https://picsum.photos/301", 2, 0, 2, 2),
-        dashboard.Item("https://picsum.photos/302", 0, 2, 1, 1),]
+    layout = []
+    data = []
     
-    # for i in range(4):
-    #     for j in range(4):
-    #         x_pos = i 
-    #         y_pos = j
-    #         layout.append(dashboard.Item(images[iteration], i, j, width, height))
-    #         iteration += 1
-    
-    print(layout)
+    offset = 0
 
+    for iteration in range(len(images)):
+        
+        # print(images[iteration][1]) # debugging
 
+        if (year == images[iteration][1]):
+            
+            x_pos = offset * width
+            y_pos = 1
+            
+            dash = dashboard.Item(images[iteration][0], x_pos, y_pos, width, height)
+            layout.append(dash)
+            data.append([dash, round(random.uniform(0, 10), 2)])
+            
+            offset += 1
 
     def handle_layout_change(updated_layout):
-        print(updated_layout)
+        print() # Callback for saving gallery layout.
 
     with dashboard.Grid(layout, onLayoutChange=handle_layout_change):
 
-        # for lay in layout:
-
-        with mui.Box(
-            key=layout[0]["i"],
-            sx={
-                "boxShadow": 1,
-                "borderRadius": 2,
-                "p": 2,
-                "minWidth": 300,
-                },
-            ):
-            with mui.Typography:
-                html.img(src=layout[0]["i"])
-
-        with mui.Box(
-            key=layout[1]["i"],
-            sx={
-                "boxShadow": 1,
-                "borderRadius": 2,
-                "p": 2,
-                "minWidth": 300,
-                },
-            ):
-            with mui.Typography:
-                html.img(src=layout[1]["i"])
-
-#         with mui.Box(
-#             key="second_item",
-#             variant="outlined",
-#             sx={
-#             # "bgcolor": "background.paper",
-#             "boxShadow": 1,
-#             "borderRadius": 2,
-#             "p": 2,
-#             "minWidth": 300,
-#             },
-#         ):
-   
-#             with mui.Typography:
-#                 html.img(src="https://picsum.photos/302", css={"object-fit": "cover"})
-        
-#         with mui.Box(
-#             key="third_item",
-#             variant="outlined",
-#             sx={
-#             # "bgcolor": "background.paper",
-#             "boxShadow": 1,
-#             "borderRadius": 2,
-#             "p": 2,
-#             "minWidth": 300,
-#             },
-#         ):
-    
-#             with mui.Typography:
-#                 html.img(src="https://picsum.photos/301", css={"object-fit": "cover"})
-
-
-
-
-
-# st.slider(label = "Choose a value:",
-#                                   min_value = 1.0,
-#                                   max_value = 10.0,
-#                                  value = (3.0,4.0))
-
-# with st.sidebar:
-#     st.write("Sidebar Functionality")
-#     #create a slider to hold user scores
-#     new_score_rating = st.slider(label = "Choose jj value:",
-#                                   min_value = 1.0,
-#                                   max_value = 10.0,
-#                                  value = (3.0,4.0))
+        for lay in layout:
+            html.img(src=lay["i"], css={"object-fit": "cover"}, key=lay["i"])
