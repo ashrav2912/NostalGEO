@@ -5,13 +5,11 @@ const app = express();
 const port = 3000;
 const db = new sqlite3.Database(path.join(__dirname, '/db/app.db'));
 
-db.run("DELETE FROM markers"); // UNCOMMENT/COMMENT OUT THIS LINE IF YOU WANT TO CLEAR/PRESERVE THE TABLE FULL OF MARKERS. RESTART THE SERVER FOR THIS TO TAKE EFFECT
+// db.run("DELETE FROM markers"); // UNCOMMENT/COMMENT OUT THIS LINE IF YOU WANT TO CLEAR/PRESERVE THE TABLE FULL OF MARKERS. RESTART THE SERVER FOR THIS TO TAKE EFFECT
 
 // EXPECTS LOCATION PARAMETER. PASS AS lat=123.123,long=123.123
 app.get('/create_marker', (req, res) => {
-    const lat = req.query.location.split(',')[0];
-    const long = req.query.location.split(',')[1];
-    db.run('INSERT INTO markers (lat, long) VALUES (?, ?)', [lat, long], function(err) {
+    db.run('INSERT INTO markers (lat, long) VALUES (?, ?)', [req.query.lat, req.query.long], function(err) {
         if (err) {
             return console.log(err.message);
         }
