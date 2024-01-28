@@ -7,6 +7,7 @@ from get_curr_loc import get_curr_loc
 import requests
 from streamlit_modal import Modal
 from gallery import gallery
+from upload import upload_page
 
 import folium
 from jinja2 import Template
@@ -73,23 +74,25 @@ def home_page():
     # print("Response: ", response.text)
     # print("Type: ", type(response.text))
     json_list = eval(response.text)
+    st.title("NostalGEO")
     # print("Json list: ", json_list)
     # print(type(json_list) , "wrong")
-    
-    # Current Location
-    print(folium.Marker(latlong, popup="Your location", tooltip="Your location").add_to(m)) 
-    
-    for ele in json_list:
-        coords = eval(ele['location'])
-        coords = list(coords)
-        folium.Marker(coords, popup="Location", tooltip="location").add_to(m)
-    
-    
-    st_data = st_folium(m, width=725)
-    print(st_data["last_object_clicked_popup"])
-    modal = Modal(key="Demo Key",title="Pop-up")
-    if(st_data["last_object_clicked_popup"] == "Your location"):
-        gallery()
+    with st.container():
+        col1, col2 = st.columns(2)
+        with col1:
+            print(folium.Marker(latlong, popup="Your location", tooltip="Your location").add_to(m)) 
+            for ele in json_list:
+                coords = eval(ele['location'])
+                coords = list(coords)
+                folium.Marker(coords, popup="Location", tooltip="location").add_to(m)
+            st_data = st_folium(m, width=725)
+        with col2:
+            upload_page()
+    # print(st_data["last_object_clicked_popup"])
+    # modal = Modal(key="Demo Key",title="Pop-up")
+    if(st_data["last_object_clicked_popup"] is not None):
+        if("location" in st_data["last_object_clicked_popup"]):
+            gallery()
 # with modal.container():
 #     st.markdown('testtesttesttesttesttesttesttest')
 
