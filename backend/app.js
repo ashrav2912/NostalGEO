@@ -23,7 +23,7 @@ app.get('/get_markers', (req, res) => {
         if (err) {
             throw err;
         }
-        console.log(JSON.stringify(rows));
+        // console.log(JSON.stringify(rows));
         res.send(rows);
 
     });
@@ -72,6 +72,16 @@ app.get('/get_time_capsules', (req, res) => {
 })
 
 
+
+
+
+
+
+// ADDING FILES
+app.post('/upload', (req, res) => {
+    // console.log(req.body);
+    res.send('Files uploaded successfully');
+});
 
     
 
