@@ -56,21 +56,21 @@ app.get('/create_time_capsule', (req, res) => {
             throw err;
         }
         if (rows.length == 0) {
-            db.get('INSERT INTO markers (lat, long) VALUES (?, ?) RETURNING *', [req.query.lat, req.query.long], function(err, result) {
+            db.get('INSERT INTO markers (lat, long) VALUES (?, ?) RETURNING *', [req.query.lat, req.query.long], function(err) {
                 if(err) throw err;
-                db.run('INSERT INTO time_capsules (author_id, marker_id, date) VALUES (1, ?, ?)', [result._id, req.query.date], function(err) {
+                db.get('INSERT INTO time_capsules (author_id, marker_id, date) VALUES (1, ?, ?) RETURNING *', [result._id, req.query.date], function(err, result) {
                     if (err) {
                         return console.log(err.message);
                     }
-                    res.send(`A row has been inserted with rowid ${this.lastID}`);
+                    res.send(result);
                 });
             });
         } else {
-            db.get('INSERT INTO time_capsules (author_id, marker_id, date) VALUES (1, ?, ?)', [rows[0]._id, req.query.date], function(err, inserted) {
+            db.get('INSERT INTO time_capsules (author_id, marker_id, date) VALUES (1, ?, ?) RETURNING *', [rows[0]._id, req.query.date], function(err, inserted) {
                 if (err) {
                     return console.log(err.message);
                 }
-                res.send(`A row has been inserted with rowid ${inserted}`);
+                res.send(inserted);
             });
         }
         
@@ -93,6 +93,17 @@ app.get('/get_time_capsules', (req, res) => {
 
 // ADDING FILES
 app.post('/upload', upload.array('file'), (req, res) => {
+    // req.files is an array of files
+    const promises = req.files.map(async (file) => {
+        // Save the file path to the database
+        const filePath = path.join(__dirname, '/uploads/', file.filename);
+        db.run('INSERT INTO media (author_id, time_capsule_id, filepath) VALUES (1, ?, ?)', [req.query.time_capsule_id, filePath], function(err) {
+            if (err) {
+                return console.log(err.message);
+            }
+            console.log(`A row has been inserted with rowid ${this.lastID}`);
+        });
+    });
     // console.log(req.files);
     res.send('Files uploaded successfully');
 });
