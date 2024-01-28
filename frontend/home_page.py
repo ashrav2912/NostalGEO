@@ -75,16 +75,16 @@ def home_page():
     # print("Type: ", type(response.text))
     json_list = eval(response.text)
     st.title("NostalGEO")
+    folium.Marker(latlong, popup="Your location", tooltip="Your location").add_to(m)
     # print("Json list: ", json_list)
     # print(type(json_list) , "wrong")
     with st.container():
         col1, col2 = st.columns(2)
-        with col1:
-            print(folium.Marker(latlong, popup="Your location", tooltip="Your location").add_to(m)) 
+        with col1: 
             for ele in json_list:
                 coords = eval(ele['location'])
                 coords = list(coords)
-                folium.Marker(coords, popup="Location", tooltip="location").add_to(m)
+                folium.Marker(coords, popup="location", tooltip="location").add_to(m)
             st_data = st_folium(m, width=725)
         with col2:
             upload_page()
