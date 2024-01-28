@@ -18,7 +18,10 @@ def upload_page():
         st.image(save_path, width=300)
         #st.success(f"File saved successfully at: {save_path}")
     print(path_array)
-    location = st.chat_input("Enter location")
+    with st.form('my_form'):
+        location = st.text_input("Enter location")
+        submit_button = st.form_submit_button(label='Submit')
+        print("Submit: ", submit_button)
     print("Location: ", location)
     if location:
         lat = Nominatim(user_agent="NostalGEO").geocode(location).raw['lat']
@@ -26,5 +29,3 @@ def upload_page():
         print("Latlong: ", [lat, long])
         response = requests.get("http://localhost:3000/create_marker?location="+str(lat)+","+str(long))
         print(response)
-if __name__ == '__main__':
-    upload_page()
