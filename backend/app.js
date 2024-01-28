@@ -61,6 +61,20 @@ app.get('/create_time_capsule', (req, res) => {
         
     });
 });
+
+
+// EXPECTS A MARKER ID TO BE PASSED AS marker_id = 123
+app.get('/get_time_capsules', (req, res) => {
+    db.all('SELECT * FROM time_capsules WHERE marker_id = ?', [req.query.marker_id], (err, rows) => {
+        if (err) {
+            throw err;
+        }
+        res.send(rows);
+    });
+})
+
+
+
     
 
 
