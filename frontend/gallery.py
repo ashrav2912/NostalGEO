@@ -6,9 +6,9 @@ import random # For testing
 
 def gallery():
 
-    st.set_page_config(layout="wide") # Smaller margins
+    #st.set_page_config(layout="wide") # Smaller margins
 
-    st.title("Nostalgeo") 
+    # st.title("Nostalgeo") 
 
     # Time Slider
     year = st.slider("Please select a rating range", min_value=2000, max_value=2015, value=(2000, 2015))
@@ -79,5 +79,3 @@ def gallery():
             for lay in layout:
                 html.img(src=lay["i"], css={"object-fit": "cover"}, key=lay["i"])
 
-if __name__ == '__main__':
-    gallery()
