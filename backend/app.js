@@ -4,7 +4,7 @@ const path = require('path');
 const app = express();
 const port = 3000;
 const db = new sqlite3.Database(path.join(__dirname, '/db/app.db'));
-
+db.run("DELETE FROM markers"); // UNCOMMENT/COMMENT OUT THIS LINE IF YOU WANT TO CLEAR/PRESERVE THE TABLE FULL OF MARKERS. RESTART THE SERVER FOR THIS TO TAKE EFFECT
 app.get('/create_marker', (req, res) => {
     db.run('INSERT INTO markers (location) VALUES (?)', [req.query.location], function(err) {
         if (err) {

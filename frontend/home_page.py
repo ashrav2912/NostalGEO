@@ -5,6 +5,7 @@ from streamlit_bokeh_events import streamlit_bokeh_events
 
 from streamlit_folium import st_folium
 from get_curr_loc import get_curr_loc
+import requests
 # def home_page():
 #     # center on Liberty Bell, add marker
 #     m = folium.Map(location=get_curr_loc(), zoom_start=16)
@@ -35,7 +36,7 @@ def location():
         events="GET_LOCATION",
         key="get_location",
         refresh_on_update=False,
-        override_height=20,
+        override_height=75,
         debounce_time=0)
     # st.bokeh_chart(result)
     if(result):
@@ -55,9 +56,12 @@ def home_page():
 
     # call to render Folium map in Streamlit
     count = 0
+    response = requests.get("http://localhost:3000/get_markers")
+    print("Response: ", response.text)
+    print("Type: ", type(response.text))
     folium.Marker(
     latlong, popup="Your location", tooltip="Your location"
-).add_to(m)
+).add_to(m) 
     folium.Marker(
     [37.7749, -122.4194], popup="Your location", tooltip="Your location").add_to(m)
     st_data = st_folium(m, width=725)
