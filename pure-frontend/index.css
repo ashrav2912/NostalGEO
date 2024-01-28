@@ -26,6 +26,7 @@ h1 {
 }
 
 /* button centered along bottom. */
+/* get rid of all file selector default styles. looks just like a button */
 #create {
     position: absolute;
     bottom: 1rem;

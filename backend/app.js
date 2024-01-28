@@ -1,9 +1,26 @@
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
+const multer = require('multer'); // For handling file uploads
 const path = require('path');
 const app = express();
 const port = 3000;
 const db = new sqlite3.Database(path.join(__dirname, '/db/app.db'));
+
+
+// Configure multer to handle file uploads
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, path.join(__dirname, '/uploads/')); // Set the destination folder
+    },
+    filename: (req, file, cb) => {
+        // Generate a unique filename
+        const uniqueName = Date.now() + '-' + Math.round(Math.random() * 1E9) + path.extname(file.originalname);
+        cb(null, uniqueName);
+    }
+});
+
+const upload = multer({ storage });
+
 
 // db.run("DELETE FROM markers"); // UNCOMMENT/COMMENT OUT THIS LINE IF YOU WANT TO CLEAR/PRESERVE THE TABLE FULL OF MARKERS. RESTART THE SERVER FOR THIS TO TAKE EFFECT
 
@@ -74,12 +91,9 @@ app.get('/get_time_capsules', (req, res) => {
 
 
 
-
-
-
 // ADDING FILES
-app.post('/upload', (req, res) => {
-    // console.log(req.body);
+app.post('/upload', upload.array('file'), (req, res) => {
+    // console.log(req.files);
     res.send('Files uploaded successfully');
 });
 

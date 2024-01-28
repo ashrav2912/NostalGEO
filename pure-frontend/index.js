@@ -1,3 +1,5 @@
+
+
 async function getCurrentPosition() {
     return new Promise((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(
@@ -39,3 +41,57 @@ async function initMap() {
 
 // Call the function to initialize the map
 initMap();
+
+// Create button click event handler
+const createButton = document.getElementById('create');
+const fileUpload = document.getElementById('fileupload');
+createButton.addEventListener('click', () => {fileUpload.click();})
+fileUpload.addEventListener('change', async (event) => {
+    const files = event.target.files;
+    // Handle the uploaded file here
+    console.log('Uploaded file:', files);
+
+    // Save each file to the "assets" folder with a unique name
+    const formData = new FormData();
+    Array.from(files).forEach((file) => {
+        formData.append('file', file);
+
+
+        // const uniqueName = generateUniqueName(file.name);
+        // const filePath = path.join(__dirname, 'assets', uniqueName);
+
+        // fs.writeFile(filePath, file, (err) => {
+        //     if (err) {
+        //         console.error('Error saving file:', err);
+        //     } else {
+        //         console.log('File saved:', filePath);
+        //         // Save the file path to the database
+        //         saveFilePathToDatabase(filePath);
+        //     }
+        // });
+    });
+
+    // SEND FILES TO BACKEND
+    const response = await fetch('http://localhost:3000/upload', {
+        method: 'POST',
+        body: formData
+    });
+    if (response.ok) {
+        console.log('Files uploaded successfully');
+    } else {
+        console.error('Error uploading files:', response.status, response.statusText);
+    }
+});
+
+function generateUniqueName(originalName) {
+    const timestamp = Date.now();
+    const randomString = Math.random().toString(36).substring(2, 8);
+    return `${timestamp}_${randomString}`;
+}
+
+function saveFilePathToDatabase(filePath) {
+    // Implement your code to save the file path to the database here
+    console.log('File path saved to database:', filePath);
+}
+
+
