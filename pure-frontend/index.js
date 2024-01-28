@@ -71,8 +71,16 @@ fileUpload.addEventListener('change', async (event) => {
         // });
     });
 
+    // create new time capsule and shit
+    let time_capsule_id
+    let currPos = await getCurrentPosition();
+    fetch('http://localhost:3000/create_time_capsule?lat=' + currPos.coords.latitude + '&long=' + currPos.coords.longitude + '&date=' + Date.now())
+    .then((response) => {
+        time_capsule_id = response._id;
+    })
+
     // SEND FILES TO BACKEND
-    const response = await fetch('http://localhost:3000/upload', {
+    const response = await fetch('http://localhost:3000/upload?time_capsule_id=' + time_capsule_id, {
         method: 'POST',
         body: formData
     });

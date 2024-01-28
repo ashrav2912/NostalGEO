@@ -56,7 +56,7 @@ app.get('/create_time_capsule', (req, res) => {
             throw err;
         }
         if (rows.length == 0) {
-            db.get('INSERT INTO markers (lat, long) VALUES (?, ?) RETURNING *', [req.query.lat, req.query.long], function(err) {
+            db.get('INSERT INTO markers (lat, long) VALUES (?, ?) RETURNING *', [req.query.lat, req.query.long], function(err, result) {
                 if(err) throw err;
                 db.get('INSERT INTO time_capsules (author_id, marker_id, date) VALUES (1, ?, ?) RETURNING *', [result._id, req.query.date], function(err, result) {
                     if (err) {
