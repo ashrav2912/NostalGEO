@@ -28,4 +28,9 @@ def upload_page():
         long = Nominatim(user_agent="NostalGEO").geocode(location).raw['lon']
         print("Latlong: ", [lat, long])
         response = requests.get("http://localhost:3000/create_marker?location="+str(lat)+","+str(long))
+        st.success("Uploaded successfully")
         print(response)
+        print(response.text)
+
+if __name__ == '__main__':
+    upload_page()
